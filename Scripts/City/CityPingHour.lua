@@ -65,7 +65,7 @@ function Run()
 		
 	------------------------------------------------------------------------------
 		local currentGameTime = math.mod(GetGametime(),24)
-		if (currentGameTime == 1) or ((currentGameTime > 1) and (currentGameTime < 0)) then
+		if (currentGameTime == 1) or ((currentGameTime > 0.5) and (currentGameTime < 1.5)) then -- check if time is 1 or between 0.5 and 1.5 (e.g if some calls took a milisecond longer), Serp
 	
 			local TaxValue = 0+ GetProperty("","TurnoverTax")
 			local Tax = 0
@@ -392,6 +392,7 @@ function CheckSmallTown()
 	AICheckWorkingPlace("", GL_BUILDING_TYPE_RANGERHUT, 1)
 	AICheckWorkingPlace("", GL_BUILDING_TYPE_ROBBER, 1)
 	AICheckWorkingPlace("", GL_BUILDING_TYPE_FRUITFARM, 1)
+	AICheckWorkingPlace("", GL_BUILDING_TYPE_BANKHOUSE, 1)
 	
 		
 	citypinghour_CheckChurch(1)
@@ -428,6 +429,8 @@ function CheckTown()
 	AICheckWorkingPlace("", GL_BUILDING_TYPE_RANGERHUT, 1)
 	AICheckWorkingPlace("", GL_BUILDING_TYPE_ROBBER, 1)
 	AICheckWorkingPlace("", GL_BUILDING_TYPE_FRUITFARM, 1)
+	AICheckWorkingPlace("", GL_BUILDING_TYPE_BANKHOUSE, 1)
+	AICheckWorkingPlace("", GL_BUILDING_TYPE_BANKHOUSE, 1)
 
 	citypinghour_CheckChurch(2)
 	
@@ -466,6 +469,7 @@ function CheckCapital()
 	AICheckWorkingPlace("", GL_BUILDING_TYPE_RANGERHUT, 1)
 	AICheckWorkingPlace("", GL_BUILDING_TYPE_ROBBER, 1)
 	AICheckWorkingPlace("", GL_BUILDING_TYPE_FRUITFARM, 1)
+	AICheckWorkingPlace("", GL_BUILDING_TYPE_BANKHOUSE, 1)
 
 	citypinghour_CheckChurch(2)
 	
@@ -542,7 +546,7 @@ function CheckAlderman()
 	if currentRound > 1 then
 
 		local currentGameTime = math.mod(GetGametime(),24)
-		if (currentGameTime == 12) or ((currentGameTime > 12) and (currentGameTime < 13)) then
+		if (currentGameTime == 12) or ((currentGameTime > 11.5) and (currentGameTime < 12.5)) then -- if time is 12 (or around 12, in multiplayer could be a small delay)
 
 			local year = GetYear() - 2 + math.mod(GetGametime(),6)
 			local DynCount = ScenarioGetObjects("cl_Dynasty", 99, "Dyn")
