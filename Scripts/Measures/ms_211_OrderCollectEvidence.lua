@@ -36,7 +36,7 @@ function Run()
 		
 	while not CheckGameTimerEnd() do
 		
-		local NumOfObjects = Find("Owner","__F( (Object.GetObjectsByRadius(Sim)==3000) AND NOT(Object.BelongsToMe())AND(Object.CanBeInterrupted(OrderCollectEvidence))AND NOT(Object.GetState(cutscene))AND NOT(Object.HasImpact(HasBeenTalked))AND NOT(Object.GetProfession() == 25)AND NOT(Object.GetProfession() == 21)AND NOT(Object.GetProfession() == 22))","Sims",-1)
+		local NumOfObjects = Find("Owner","__F( (Object.GetObjectsByRadius(Sim)==1000) AND NOT(Object.BelongsToMe())AND(Object.CanBeInterrupted(OrderCollectEvidence))AND NOT(Object.GetState(cutscene))AND NOT(Object.HasImpact(HasBeenTalked))AND NOT(Object.GetProfession() == 25)AND NOT(Object.GetProfession() == 21)AND NOT(Object.GetProfession() == 22))","Sims",-1)
 		if NumOfObjects>0 then
 			local DestAlias = "Sims"..Rand(NumOfObjects)
 			
@@ -108,7 +108,7 @@ function Run()
 		end
 	end
 	
-	MeasureRun("","Destination",211,true)
+	MeasureRun("","Destination",2110,true)
 	
 	--f_MoveTo("","Workbuilding")
 end
