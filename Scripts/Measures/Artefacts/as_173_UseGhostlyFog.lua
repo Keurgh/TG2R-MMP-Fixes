@@ -1,15 +1,15 @@
 -------------------------------------------------------------------------------
 ----
-----	OVERVIEW "as_222_UseMixture"
+----	OVERVIEW "as_173_UseGhostlyFog"
 ----
-----	with this artifact, the player can infect someone with a disease
+----	with this artifact, the player can decrease the Destinations empathy by 25%
 ----
 -------------------------------------------------------------------------------
 
 function Run()
 
 	if IsStateDriven() then
-		local ItemName = "Mixture"
+		local ItemName = "GhostlyFog"
 		if GetItemCount("", ItemName, INVENTORY_STD)==0 then
 			if not ai_BuyItem("", ItemName, 1, INVENTORY_STD) then
 				return
@@ -18,8 +18,10 @@ function Run()
 	end
 
 	
+	--how much the empathy of the Destination is decreased (25%)
+	local modifyvalue = (math.ceil(GetSkillValue("Destination",EMPATHY)*.25))
 	--how much the favor of the Destination to the owner is decreased
-	local favormodify = 20
+	local favormodify = 10
 	--how far the Destination can be to start this action
 	local MaxDistance = 1500
 	--how far from the destination, the owner should stand while reading the letter from rome
@@ -45,7 +47,7 @@ function Run()
 	GetPosition("Destination", "ParticleSpawnPos")
 	time2 = PlayAnimationNoWait("Destination","cogitate")
 	--play animation and spawn particles
-	if RemoveItems("","Mixture",1)>0 then
+	if RemoveItems("","Ghostlyfog",1)>0 then
 		CommitAction("poison","","Destination","Destination")
 		local Time
 		Time = PlayAnimationNoWait("","use_object_standing")
@@ -53,7 +55,7 @@ function Run()
 		PlaySound3D("","Locations/wear_clothes/wear_clothes+1.wav", 1.0)
 		CarryObject("","Handheld_Device/ANIM_perfumebottle.nif",false)
 		Sleep(5)
-		StartSingleShotParticle("particles/disease.nif", "ParticleSpawnPos",2.7,5)
+		StartSingleShotParticle("particles/GhostlyFog.nif", "ParticleSpawnPos",2.7,5)
 		PlaySound3D("","Locations/destillery/destillery+0.wav", 1.0)
 		PlayAnimationNoWait("Destination", "appal")				
 		PlayFE("Owner", "smile", 1, 2, 0)
@@ -62,37 +64,39 @@ function Run()
 		CarryObject("","",false)
 		Sleep(1)
 		StopAction("poison","")
-		
-		SetState("Destination",STATE_UNCONSCIOUS,true)
-		AddImpact("Destination","BadDay",1,12)
-		
-		CreateScriptcall("StartDisease",1,"Measures/Artefacts/as_222_UseMixture.lua","StartDisease","Owner","Destination")
-		
-		--let the Destination run away
-		GetFleePosition("Destination", "Owner", 500, "Away")
-		f_MoveToNoWait("Destination", "Away", GL_MOVESPEED_RUN)
-		
+		--modify the empathy
+		if (modifyvalue >= GetSkillValue("Destination",EMPATHY)) then	
+			--show overhead text -> NO EFFECT
+				
+			Sleep(1)
+				
+		else
+			AddImpact("Destination","empathy",-modifyvalue,duration)
+			AddImpact("Destination","ghostlyfog",1,duration)
+			--show overhead text
+			feedback_OverheadSkill("Destination", "@L_ARTEFACTS_OVERHEAD_+1", false, 
+				"@L$S[2022]", "@L_TALENTS_empathy_NAME_+0", modifyvalue)
+	
+			Sleep(1)	
+			--let the Destination run away
+			GetFleePosition("Destination", "Owner", 500, "Away")
+			f_MoveToNoWait("Destination", "Away", GL_MOVESPEED_RUN)
+		end
 		
 		--modify the favor
 		
 		chr_ModifyFavor("Destination","",-favormodify)
-				
+		MsgNewsNoWait("Destination","","","intrigue",-1,
+				"@L_ARTEFACTS_173_USEGHOSTLYFOG_MSG_VICTIM_HEAD_+0",
+				"@L_ARTEFACTS_173_USEGHOSTLYFOG_MSG_VICTIM_BODY_+0", GetID("Destination"), GetID(""))
+	
+		
 		Sleep(1)
 		chr_GainXP("",GetData("BaseXP"))
 		SetMeasureRepeat(TimeOut)
 		Sleep(2)
 	end
 	StopMeasure()
-end
-
-function StartDisease()
-	--infect
-	if GetImpactValue("Destination","staffofaesculap")>0 or GetImpactValue("Destination","soap")>0 then
-		--no effect
-	else
-		diseases_Blackdeath("Destination",true,true)
-		SetState("",STATE_SICK,true)
-	end
 end
 
 -- -----------------------
@@ -106,6 +110,7 @@ end
 function GetOSHData(MeasureID)
 	--can be used again in:
 	OSHSetMeasureRepeat("@L_ONSCREENHELP_7_MEASURES_TIMEINFOS_+2",Gametime2Total(mdata_GetTimeOut(MeasureID)))
-	
+	--active time:
+	OSHSetMeasureRuntime("@L_ONSCREENHELP_7_MEASURES_TIMEINFOS_+0",Gametime2Total(mdata_GetDuration(MeasureID)))
 end
 
