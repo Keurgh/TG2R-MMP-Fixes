@@ -269,8 +269,7 @@ function Attack()
 	SetData("Tarnung",0)
 	SetState("", STATE_HIDDEN, false)
 
-	CommitAction("attackcart", "", "", "Victim")
-	StopAction("attackcart", "")
+	CommitAction("attackcart", "", "Victim")
 	
 	SetProperty("Squad","PrimaryTarget",GetID("Victim"))
 	
@@ -320,7 +319,8 @@ function Plunder()
 	end
 	
 	SetProperty("","DontLeave", 1)
-	CommitAction("plunder", "", "", "Victim")
+	StopAction("attackcart", "")
+	CommitAction("plunder", "", "Victim")
 	Sleep(2)
 	
 	if IsType("Victim","Sim") then

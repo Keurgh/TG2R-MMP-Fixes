@@ -121,10 +121,10 @@ function Run()
 		
 	--start the action
 	if BuildingGetOwner("Destination","BOwner") then
-		CommitAction("burgleahouse", "", "", "Destination", "Destination")
+		CommitAction("burgleahouse", "", "Destination", "Destination")
 	else
 		if BuildingGetSim("Destination",0,"DummyOwner") then
-			CommitAction("burgleahouse", "", "", "DummyOwner", "Destination")
+			CommitAction("burgleahouse", "", "DummyOwner", "Destination")
 		end
 	end
 	
@@ -167,7 +167,7 @@ function Run()
 			local TimeLeft = ImpactGetMaxTimeleft("Destination","BoobyTrap")
 			AddImpact("Destination","buildingburgledtoday",1,TimeLeft)
 		end
-		CommitAction("explosion", "", "", "Destination", "Destination")
+		CommitAction("explosion", "", "Destination", "Destination")
 		StopMeasure()
 	end
 	
